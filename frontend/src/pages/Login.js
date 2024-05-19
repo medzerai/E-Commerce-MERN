@@ -1,41 +1,67 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import loginIcons from "../assets/signin.gif";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleOnChange = (e) => {
+    const { name, value } = e.target;
+
+    setData((preve) => {
+      return {
+        ...preve,
+        [name]: value,
+      };
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+  };
+
+  console.log("data login", data);
 
   return (
     <section id="login">
-      <div className="mx-auto container p-6">
+      <div className="mx-auto container p-4">
         <div className="bg-white p-5 w-full max-w-sm mx-auto">
           <div className="w-20 h-20 mx-auto">
-            <img src={loginIcons} alt="login icons" srcset="" />
+            <img src={loginIcons} alt="login icons" />
           </div>
-          <form action="" className="pt-6 flex flex-col gap-2">
+
+          <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
             <div className="grid">
-              <label htmlFor="">Email : </label>
+              <label>Email : </label>
               <div className="bg-slate-100 p-2">
                 <input
-                  className="w-full h-full outline-none bg-transparent"
                   type="email"
-                  name=""
-                  id=""
                   placeholder="enter email"
+                  name="email"
+                  value={data.email}
+                  onChange={handleOnChange}
+                  className="w-full h-full outline-none bg-transparent"
                 />
               </div>
             </div>
+
             <div>
-              <label htmlFor="">Password : </label>
+              <label>Password : </label>
               <div className="bg-slate-100 p-2 flex">
                 <input
-                  className="w-full h-full outline-none bg-transparent"
                   type={showPassword ? "text" : "password"}
-                  name=""
-                  id=""
                   placeholder="enter password"
+                  value={data.password}
+                  name="password"
+                  onChange={handleOnChange}
+                  className="w-full h-full outline-none bg-transparent"
                 />
                 <div
                   className="cursor-pointer text-xl"
@@ -44,23 +70,24 @@ const Login = () => {
                   <span>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
                 </div>
               </div>
-
               <Link
                 to={"/forgot-password"}
-                className="block w-fit ml-auto hover:underline hover:text-red-600"
+                className="block w-fit ml-auto hover:underline hover:text-blue-600"
               >
                 Forgot password ?
               </Link>
             </div>
-            <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6">
+
+            <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6">
               Login
             </button>
           </form>
+
           <p className="my-5">
             Don't have account ?{" "}
             <Link
               to={"/sign-up"}
-              className=" text-red-600 hover:text-red-700 hover:underline"
+              className=" text-blue-600 hover:text-blue-700 hover:underline"
             >
               Sign up
             </Link>

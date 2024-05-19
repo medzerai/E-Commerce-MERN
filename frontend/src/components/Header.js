@@ -23,7 +23,7 @@ const Header = () => {
             name=""
             id=""
           />
-          <div className="text-lg min-w-[50px] h-8 bg-red-600 flex items-center justify-center rounded-r-full text-white">
+          <div className="text-lg min-w-[50px] h-8 bg-blue-600 flex items-center justify-center rounded-r-full text-white">
             <GrSearch />
           </div>
         </div>
@@ -37,7 +37,7 @@ const Header = () => {
             <span>
               <FaShoppingCart />
             </span>
-            <div className="bg-red-600 text-white w-5 h-5 p-1 rounded-full flex items-center justify-center absolute -top-2 -right-3">
+            <div className="bg-blue-600 text-white w-5 h-5 p-1 rounded-full flex items-center justify-center absolute -top-2 -right-3">
               <p className="text-sm">0</p>
             </div>
           </div>
@@ -45,7 +45,7 @@ const Header = () => {
           <div>
             <Link
               to={"/login"}
-              className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700"
+              className="px-3 py-1 rounded-full text-white bg-blue-600 hover:bg-blue-700"
             >
               Login
             </Link>
