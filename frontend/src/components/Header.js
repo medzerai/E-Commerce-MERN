@@ -1,11 +1,23 @@
-import React from "react";
-import Logo from "./Logo";
+import React, { useContext, useState } from 'react'
+import Logo from './Logo'
 import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import SummaryApi from '../common';
+import { toast } from 'react-toastify'
+import { setUserDetails } from '../store/userSlice';
+import ROLE from '../common/role';
+import Context from '../context';
 
 const Header = () => {
+  const user = useSelector((state) => state?.user?.user);
+  const dispatch = useDispatch();
+  const [menuDisplay, setMenuDisplay] = useState(false);
+  const context = useContext(Context);
+  const navigate = useNavigate();
+
   return (
     <header className="h-16 shadow-md bg-white">
       <div className="h-full container mx-auto flex items-center px-4 justify-between">
@@ -29,8 +41,39 @@ const Header = () => {
         </div>
 
         <div className="flex items-center gap-7">
-          <div className="text-3xl cursor-pointer">
-            <FaRegCircleUser />
+          <div className="relative flex justify-center">
+            {user?._id && (
+              <div
+                className="text-3xl cursor-pointer relative flex justify-center"
+                onClick={() => setMenuDisplay((preve) => !preve)}
+              >
+                {user?.profilePic ? (
+                  <img
+                    src={user?.profilePic}
+                    className="w-10 h-10 rounded-full"
+                    alt={user?.name}
+                  />
+                ) : (
+                  <FaRegCircleUser />
+                )}
+              </div>
+            )}
+
+            {menuDisplay && (
+              <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded">
+                <nav>
+                  {user?.role === ROLE.ADMIN && (
+                    <Link
+                      to={"/admin-panel/all-products"}
+                      className="whitespace-nowrap hidden md:block hover:bg-slate-100 p-2"
+                      onClick={() => setMenuDisplay((preve) => !preve)}
+                    >
+                      Admin Panel
+                    </Link>
+                  )}
+                </nav>
+              </div>
+            )}
           </div>
 
           <div className="text-2xl relative">
