@@ -1,15 +1,15 @@
-import React, { useContext, useState } from 'react'
-import Logo from './Logo'
+import React, { useContext, useState } from "react";
+import Logo from "./Logo";
 import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import SummaryApi from '../common';
-import { toast } from 'react-toastify'
-import { setUserDetails } from '../store/userSlice';
-import ROLE from '../common/role';
-import Context from '../context';
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import SummaryApi from "../common";
+import { toast } from "react-toastify";
+import { setUserDetails } from "../store/userSlice";
+import ROLE from "../common/role";
+import Context from "../context";
 
 const Header = () => {
   const user = useSelector((state) => state?.user?.user);
@@ -17,6 +17,25 @@ const Header = () => {
   const [menuDisplay, setMenuDisplay] = useState(false);
   const context = useContext(Context);
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    const fetchData = await fetch(SummaryApi.logout_user.url, {
+      method: SummaryApi.logout_user.method,
+      credentials: "include",
+    });
+
+    const data = await fetchData.json();
+
+    if (data.success) {
+      toast.success(data.message);
+      dispatch(setUserDetails(null));
+      navigate("/");
+    }
+
+    if (data.error) {
+      toast.error(data.message);
+    }
+  };
 
   return (
     <header className="h-16 shadow-md bg-white">
@@ -76,22 +95,34 @@ const Header = () => {
             )}
           </div>
 
-          <div className="text-2xl relative">
-            <span>
-              <FaShoppingCart />
-            </span>
-            <div className="bg-blue-600 text-white w-5 h-5 p-1 rounded-full flex items-center justify-center absolute -top-2 -right-3">
-              <p className="text-sm">0</p>
-            </div>
-          </div>
+          {user?._id && (
+            <Link to={"/cart"} className="text-2xl relative">
+              <span>
+                <FaShoppingCart />
+              </span>
+
+              <div className="bg-blue-600 text-white w-5 h-5 rounded-full p-1 flex items-center justify-center absolute -top-2 -right-3">
+                <p className="text-sm">{context?.cartProductCount}</p>
+              </div>
+            </Link>
+          )}
 
           <div>
-            <Link
-              to={"/login"}
-              className="px-3 py-1 rounded-full text-white bg-blue-600 hover:bg-blue-700"
-            >
-              Login
-            </Link>
+            {user?._id ? (
+              <button
+                onClick={handleLogout}
+                className="px-3 py-1 rounded-full text-white bg-blue-600 hover:bg-blue-700"
+              >
+                Logout
+              </button>
+            ) : (
+              <Link
+                to={"/login"}
+                className="px-3 py-1 rounded-full text-white bg-blue-600 hover:bg-blue-700"
+              >
+                Login
+              </Link>
+            )}
           </div>
         </div>
       </div>
