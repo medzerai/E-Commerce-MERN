@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { CgClose } from "react-icons/cg";
+import productCategory from "../helpers/productCategory";
 import { FaCloudUploadAlt } from "react-icons/fa";
+import uploadImage from "../helpers/uploadImage";
+import DisplayImage from "./DisplayImage";
 import { MdDelete } from "react-icons/md";
 import SummaryApi from "../common";
 import { toast } from "react-toastify";
@@ -31,11 +34,12 @@ const UploadProduct = ({ onClose, fetchData }) => {
 
   const handleUploadProduct = async (e) => {
     const file = e.target.files[0];
+    const uploadImageCloudinary = await uploadImage(file);
 
     setData((preve) => {
       return {
         ...preve,
-        productImage: [...preve.productImage],
+        productImage: [...preve.productImage, uploadImageCloudinary.url],
       };
     });
   };
@@ -88,7 +92,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
         <div className="flex justify-between items-center pb-3">
           <h2 className="font-bold text-lg">Upload Product</h2>
           <div
-            className="w-fit ml-auto text-2xl hover:text-blue-600 cursor-pointer"
+            className="w-fit ml-auto text-2xl hover:text-red-600 cursor-pointer"
             onClick={onClose}
           >
             <CgClose />
@@ -136,6 +140,13 @@ const UploadProduct = ({ onClose, fetchData }) => {
             className="p-2 bg-slate-100 border rounded"
           >
             <option value={""}>Select Category</option>
+            {productCategory.map((el, index) => {
+              return (
+                <option value={el.value} key={el.value + index}>
+                  {el.label}
+                </option>
+              );
+            })}
           </select>
 
           <label htmlFor="productImage" className="mt-3">
@@ -176,7 +187,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
                       />
 
                       <div
-                        className="absolute bottom-0 right-0 p-1 text-white bg-blue-600 rounded-full hidden group-hover:block cursor-pointer"
+                        className="absolute bottom-0 right-0 p-1 text-white bg-red-600 rounded-full hidden group-hover:block cursor-pointer"
                         onClick={() => handleDeleteProductImage(index)}
                       >
                         <MdDelete />
@@ -186,7 +197,7 @@ const UploadProduct = ({ onClose, fetchData }) => {
                 })}
               </div>
             ) : (
-              <p className="text-blue-600 text-xs">
+              <p className="text-red-600 text-xs">
                 *Please upload product image
               </p>
             )}
@@ -232,13 +243,19 @@ const UploadProduct = ({ onClose, fetchData }) => {
             value={data.description}
           ></textarea>
 
-          <button className="px-3 py-2 bg-blue-600 text-white mb-10 hover:bg-blue-700">
+          <button className="px-3 py-2 bg-red-600 text-white mb-10 hover:bg-red-700">
             Upload Product
           </button>
         </form>
       </div>
 
       {/***display image full screen */}
+      {openFullScreenImage && (
+        <DisplayImage
+          onClose={() => setOpenFullScreenImage(false)}
+          imgUrl={fullScreenImage}
+        />
+      )}
     </div>
   );
 };
