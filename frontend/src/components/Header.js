@@ -17,6 +17,10 @@ const Header = () => {
   const [menuDisplay, setMenuDisplay] = useState(false);
   const context = useContext(Context);
   const navigate = useNavigate();
+  const searchInput = useLocation();
+  const URLSearch = new URLSearchParams(searchInput?.search);
+  const searchQuery = URLSearch.getAll("q");
+  const [search, setSearch] = useState(searchQuery);
 
   const handleLogout = async () => {
     const fetchData = await fetch(SummaryApi.logout_user.url, {
@@ -37,22 +41,32 @@ const Header = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    const { value } = e.target;
+    setSearch(value);
+
+    if (value) {
+      navigate(`/search?q=${value}`);
+    } else {
+      navigate("/search");
+    }
+  };
   return (
-    <header className="h-16 shadow-md bg-white">
-      <div className="h-full container mx-auto flex items-center px-4 justify-between">
+    <header className="h-16 shadow-md bg-white w-full z-40">
+      <div className=" h-full container mx-auto flex items-center px-4 justify-between">
         <div className="">
           <Link to={"/"}>
             <Logo w={100} h={100} />
           </Link>
         </div>
 
-        <div className="hidden lg:flex items-center w-full justify-between max-w-sm border rounded-full focus-within:shadow-md pl-2">
+        <div className="hidden lg:flex items-center w-full justify-between max-w-sm border rounded-full focus-within:shadow pl-2">
           <input
             type="text"
-            className="w-full outline-none pl-2"
-            placeholder="search for products here ..."
-            name=""
-            id=""
+            placeholder="search product here..."
+            className="w-full outline-none"
+            onChange={handleSearch}
+            value={search}
           />
           <div className="text-lg min-w-[50px] h-8 bg-blue-600 flex items-center justify-center rounded-r-full text-white">
             <GrSearch />
