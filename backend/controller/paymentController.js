@@ -1,9 +1,7 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Stripe = require('stripe');
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
-exports.getStripeKey = (req, res) => {
-    res.status(200).json({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY });
-};
-
+exports.createPaymentIntent = async (req, res) => {
     try {
         const { amount, currency } = req.body;
 
@@ -27,4 +25,6 @@ exports.getStripeKey = (req, res) => {
     }
 };
 
-
+exports.getStripeKey = (req, res) => {
+    res.status(200).json({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY });
+};
