@@ -141,7 +141,7 @@ const Cart = () => {
                     <div className="px-4 py-2 relative">
                       {/**delete product */}
                       <div
-                        className="absolute right-0 text-blue-600 rounded-full p-2 hover:bg-blue-600 hover:text-white cursor-pointer"
+                        className="absolute right-0 text-red-600 rounded-full p-2 hover:bg-red-600 hover:text-white cursor-pointer"
                         onClick={() => deleteCartProduct(product?._id)}
                       >
                         <MdDelete />
