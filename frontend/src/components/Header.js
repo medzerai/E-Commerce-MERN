@@ -97,7 +97,7 @@ const Header = () => {
                 <nav>
                   {user?.role === ROLE.ADMIN && (
                     <Link
-                      to={"/admin-panel"}
+                      to={"/admin-panel/all-products"}
                       className="whitespace-nowrap hidden md:block hover:bg-slate-100 p-2"
                       onClick={() => setMenuDisplay((preve) => !preve)}
                     >
