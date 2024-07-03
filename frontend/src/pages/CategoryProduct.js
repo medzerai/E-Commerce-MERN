@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import productCategory from "../helpers/productCategory";
+import VerticalCard from "../components/VerticalCard";
 import SummaryApi from "../common";
 
 const CategoryProduct = () => {
@@ -161,7 +162,11 @@ const CategoryProduct = () => {
             Search Results : {data.length}
           </p>
 
-          <div className="min-h-[calc(100vh-120px)] overflow-y-scroll max-h-[calc(100vh-120px)]"></div>
+          <div className="min-h-[calc(100vh-120px)] overflow-y-scroll max-h-[calc(100vh-120px)]">
+            {data.length !== 0 && !loading && (
+              <VerticalCard data={data} loading={loading} />
+            )}
+          </div>
         </div>
       </div>
     </div>
