@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import fetchCategoryWiseProduct from "../helpers/fetchCategoryAllProduct";
+import fetchCategoryAllProduct from "../helpers/fetchCategoryAllProduct";
 import displayINRCurrency from "../helpers/displayCurrency";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import addToCart from "../helpers/addToCard";
+import addToCart from "../helpers/addToCart";
 import Context from "../context";
 
 const HorizontalCardProduct = ({ category, heading }) => {
@@ -23,7 +23,7 @@ const HorizontalCardProduct = ({ category, heading }) => {
 
   const fetchData = async () => {
     setLoading(true);
-    const categoryProduct = await fetchCategoryWiseProduct(category);
+    const categoryProduct = await fetchCategoryAllProduct(category);
     setLoading(false);
 
     console.log("horizontal data", categoryProduct.data);
