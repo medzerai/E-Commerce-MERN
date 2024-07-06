@@ -1,14 +1,23 @@
 # Steps
 
 get .env for backend
+
 cd backend
+
 npm i
+
 npm run dev
 
+
+
 get .env for frontend
+
 cd frontend
+
 npm i
+
 npm start
+
 
 # Getting Started with Create React App
 
