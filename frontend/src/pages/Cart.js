@@ -3,12 +3,17 @@ import SummaryApi from "../common";
 import Context from "../context";
 import displayINRCurrency from "../helpers/displayCurrency";
 import { MdDelete } from "react-icons/md";
+import { loadStripe } from "@stripe/stripe-js";
 
 const Cart = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   const context = useContext(Context);
   const loadingCart = new Array(4).fill(null);
+
+  const stripePromise = loadStripe(
+    "pk_test_51PQ8NUP1gKFPFXJbZXbWDu7Z4VuG17FQ9mmKI4H4qNVyATbRvsR3KjF1ehwcBQ85o3qgXfGgEEVgdNLIBmB8mchQ00MoF4eQaz"
+  );
 
   const fetchData = async () => {
     const response = await fetch(SummaryApi.addToCartProductView.url, {
@@ -106,6 +111,50 @@ const Cart = () => {
     (preve, curr) => preve + curr.quantity * curr?.productId?.sellingPrice,
     0
   );
+
+  const handlePayment = async () => {
+    const stripe = await stripePromise;
+    console.log("Total Price for Payment:", totalPrice);
+
+    const lineItems = data.map((product) => ({
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: product.productId.productName,
+          images: [product.productId.productImage[0]],
+        },
+        unit_amount: product.productId.sellingPrice * 100 * 0.32, // Convert to cents
+      },
+      quantity: product.quantity,
+    }));
+
+    try {
+      const response = await fetch(
+        "http://localhost:8080/create-checkout-session", // Updated backend URL
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ lineItems }), // Send detailed product info to your server
+        }
+      );
+
+      const session = await response.json();
+      const result = await stripe.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.error(result.error.message);
+        // Handle error
+      }
+    } catch (error) {
+      console.error("Error during payment:", error);
+      // Handle error
+    }
+  };
+
   return (
     <div className="container mx-auto">
       <div className="text-center text-lg my-3">
@@ -205,7 +254,10 @@ const Cart = () => {
                 <p>{displayINRCurrency(totalPrice)}</p>
               </div>
 
-              <button className="bg-green-600 p-2 text-white w-full mt-2">
+              <button
+                className="bg-green-600 p-2 text-white w-full mt-2"
+                onClick={handlePayment}
+              >
                 Payment
               </button>
             </div>
