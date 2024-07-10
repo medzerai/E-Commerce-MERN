@@ -77,6 +77,10 @@ const SummaryApi = {
     url: `${backendDomain}/api/filter-product`,
     method: "post",
   },
+  deleteProduct: {
+    url: `${backendDomain}/api/delete-product`,
+    method: "post",
+  },
 };
 
 export default SummaryApi;
